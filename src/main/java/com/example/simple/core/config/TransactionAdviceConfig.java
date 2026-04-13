@@ -13,14 +13,24 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
+/**
+ * 事务配置类
+ * 通过AOP方式配置声明式事务管理
+ */
 @Aspect
 @Configuration
 public class TransactionAdviceConfig {
+
+    /** AOP切点表达式 */
     private static final String AOP_POINTCUT_EXPRESSION = "execution (* com.***.service.*.*(..))";
 
     @Autowired
     private PlatformTransactionManager transactionManager;
 
+    /**
+     * 创建事务拦截器
+     * @return TransactionInterceptor对象
+     */
     @Bean
     public TransactionInterceptor txAdvice() {
 
@@ -47,6 +57,10 @@ public class TransactionAdviceConfig {
         return new TransactionInterceptor(transactionManager, source);
     }
 
+    /**
+     * 创建事务切面
+     * @return Advisor对象
+     */
     @Bean
     public Advisor txAdviceAdvisor() {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();

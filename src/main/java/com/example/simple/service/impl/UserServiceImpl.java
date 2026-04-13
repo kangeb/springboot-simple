@@ -10,38 +10,65 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * 用户服务实现类
+ * 实现用户相关的业务逻辑
+ */
 @Service("userServiceImpl")
 public class UserServiceImpl implements IUserService {
-	@Resource
-	private UserMapper userMapper;
-	@Override
-	public User queryUser(User user) {
-		//处理自定义异常
-		if(user.getName()==null) {
-			throw new CustomException("用户名不能为空");
-		}
-		return userMapper.selectUser(user);
-	}
-	@Override
-	//@Transactional(propagation= Propagation.NEVER)
-	//@Transactional(propagation= Propagation.MANDATORY)
-	@Transactional()
-	public void saveUser(User user) {
-		userMapper.insertUser(user);
-		//throw new RuntimeException();
-	}
-	@Transactional()
-	public void saveOneUser(User user) {
-		saveUser(user);
-		throw new RuntimeException();
-	}
-	@Override
-	public User queryByName(String name) {
-		// TODO Auto-generated method stub
-		return userMapper.queryByName(name);
-	}
-	@Override
-	public List<User> queryAll() {
-		return userMapper.queryAll();
-	}
+
+    @Resource
+    private UserMapper userMapper;
+
+    /**
+     * 根据用户名和密码查询用户
+     * @param user 用户对象
+     * @return 查询到的用户对象
+     */
+    @Override
+    public User queryUser(User user) {
+        if (user.getName() == null) {
+            throw new CustomException("用户名不能为空");
+        }
+        return userMapper.selectUser(user);
+    }
+
+    /**
+     * 保存用户
+     * @param user 用户对象
+     */
+    @Override
+    @Transactional()
+    public void saveUser(User user) {
+        userMapper.insertUser(user);
+    }
+
+    /**
+     * 保存单个用户（测试事务用）
+     * @param user 用户对象
+     */
+    @Transactional()
+    public void saveOneUser(User user) {
+        saveUser(user);
+        throw new RuntimeException();
+    }
+
+    /**
+     * 根据用户名查询用户
+     * @param name 用户名
+     * @return 用户对象
+     */
+    @Override
+    public User queryByName(String name) {
+        return userMapper.queryByName(name);
+    }
+
+    /**
+     * 查询所有用户
+     * @return 用户列表
+     */
+    @Override
+    public List<User> queryAll() {
+        return userMapper.queryAll();
+    }
 }
