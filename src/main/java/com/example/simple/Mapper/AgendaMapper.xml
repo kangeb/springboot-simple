@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.simple.Mapper.AgendaMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.simple.domain.Agenda">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="details" property="details" jdbcType="VARCHAR"/>
+        <result column="date" property="date" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        uuid, name, title, details, date, remark
+    </sql>
+
+    <insert id="addAgenda" parameterType="com.example.simple.domain.Agenda">
+        INSERT INTO ssmapi_agenda(uuid, name, title, details, date, remark)
+        VALUES (uuid(), #{name}, #{title}, #{details}, #{date}, #{remark})
+    </insert>
+
+    <delete id="deleteAgenda" parameterType="java.lang.String">
+        DELETE FROM ssmapi_agenda WHERE uuid = #{uuid}
+    </delete>
+
+    <update id="updateAgenda" parameterType="com.example.simple.domain.Agenda">
+        UPDATE ssmapi_agenda
+        SET name = #{name},
+            title = #{title},
+            details = #{details},
+            date = #{date},
+            remark = #{remark}
+        WHERE uuid = #{uuid}
+    </update>
+
+    <select id="selectAgendaByUuid" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ssmapi_agenda
+        WHERE uuid = #{uuid}
+    </select>
+
+    <delete id="deleteMoreAgenda" parameterType="java.lang.String">
+        DELETE FROM ssmapi_agenda
+        WHERE uuid IN
+        <foreach collection="array" item="uuid" index="index" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </delete>
+
+</mapper>
