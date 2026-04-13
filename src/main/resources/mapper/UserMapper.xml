@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.simple.Mapper.UserMapper">
+
+    <!-- 查询用户（根据用户名和密码） -->
+    <select id="selectUser" resultType="com.example.simple.domain.User">
+        SELECT uuid, name, password, phone, email, remark
+        FROM ssmapi_user
+        WHERE name = #{name} AND password = #{password}
+    </select>
+
+    <!-- 插入用户 -->
+    <insert id="insertUser">
+        INSERT INTO ssmapi_user (uuid, name, password, phone, email, remark)
+        VALUES (UUID(), #{name}, #{password}, #{phone}, #{email}, #{remark})
+    </insert>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="queryByName" resultType="com.example.simple.domain.User">
+        SELECT uuid, name, password, phone, email, remark
+        FROM ssmapi_user
+        WHERE name = #{name}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="queryAll" resultType="com.example.simple.domain.User">
+        SELECT uuid, name, password, phone, email, remark
+        FROM ssmapi_user
+    </select>
+
+</mapper>

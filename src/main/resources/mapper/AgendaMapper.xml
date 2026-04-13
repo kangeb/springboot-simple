@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.simple.Mapper.AgendaMapper">
+
+    <!-- 添加日程 -->
+    <insert id="addAgenda">
+        INSERT INTO ssmapi_agenda (uuid, name, title, details, date, remark)
+        VALUES (UUID(), #{name}, #{title}, #{details}, #{date}, #{remark})
+    </insert>
+
+    <!-- 根据UUID删除日程 -->
+    <delete id="deleteAgenda">
+        DELETE FROM ssmapi_agenda WHERE uuid = #{uuid}
+    </delete>
+
+    <!-- 更新日程 -->
+    <update id="updateAgenda">
+        UPDATE ssmapi_agenda
+        SET name = #{name},
+            title = #{title},
+            details = #{details},
+            date = #{date},
+            remark = #{remark}
+        WHERE uuid = #{uuid}
+    </update>
+
+    <!-- 根据UUID查询日程 -->
+    <select id="selectAgendaByUuid" resultType="com.example.simple.domain.Agenda">
+        SELECT uuid, name, title, details, date, remark
+        FROM ssmapi_agenda
+        WHERE uuid = #{uuid}
+    </select>
+
+    <!-- 批量删除日程 -->
+    <delete id="deleteMoreAgenda">
+        DELETE FROM ssmapi_agenda WHERE uuid IN
+        <foreach collection="array" item="uuid" index="index" open="(" close=")" separator=",">
+            #{uuid}
+        </foreach>
+    </delete>
+
+</mapper>

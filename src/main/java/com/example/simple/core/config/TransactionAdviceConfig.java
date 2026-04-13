@@ -13,24 +13,42 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
+/**
+ * 事务Advice配置类
+ * 通过AOP配置声明式事务
+ */
 @Aspect
 @Configuration
 public class TransactionAdviceConfig {
+
+    /**
+     * AOP切点表达式
+     * 匹配service包下的所有方法
+     */
     private static final String AOP_POINTCUT_EXPRESSION = "execution (* com.***.service.*.*(..))";
 
     @Autowired
     private PlatformTransactionManager transactionManager;
 
+    /**
+     * 配置事务拦截器
+     * 定义不同方法前缀的事务传播行为
+     *
+     * @return TransactionInterceptor对象
+     */
     @Bean
     public TransactionInterceptor txAdvice() {
 
+        // 需要事务的传播行为
         DefaultTransactionAttribute txAttr_REQUIRED = new DefaultTransactionAttribute();
         txAttr_REQUIRED.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
+        // 只读事务的传播行为
         DefaultTransactionAttribute txAttr_REQUIRED_READONLY = new DefaultTransactionAttribute();
         txAttr_REQUIRED_READONLY.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         txAttr_REQUIRED_READONLY.setReadOnly(true);
 
+        // 方法名匹配规则
         NameMatchTransactionAttributeSource source = new NameMatchTransactionAttributeSource();
         source.addTransactionalMethod("add*", txAttr_REQUIRED);
         source.addTransactionalMethod("save*", txAttr_REQUIRED);
@@ -47,6 +65,12 @@ public class TransactionAdviceConfig {
         return new TransactionInterceptor(transactionManager, source);
     }
 
+    /**
+     * 配置事务Advisor
+     * 将切点与事务拦截器关联
+     *
+     * @return Advisor对象
+     */
     @Bean
     public Advisor txAdviceAdvisor() {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
